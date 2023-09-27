@@ -33,6 +33,7 @@
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.json",
     "precommit": "lint-staged",
+    "prepare": "npm run prepublish:npm && node prepareScript.js",
     "prepublish:npm": "npm run build",
     "publish:npm": "npm publish --access public",
     "test": "",
