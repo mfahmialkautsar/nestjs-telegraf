@@ -20,7 +20,7 @@ Now you can connect middleware:
 app.use(bot.webhookCallback('/secret-path'));
 ```
 
-The last step is to specify launchOptions in `forRoot` method:
+The last step is to specify `launchOptions` in `forRoot` method:
 ```typescript
 TelegrafModule.forRootAsync({
   imports: [ConfigModule],
@@ -29,10 +29,11 @@ TelegrafModule.forRootAsync({
     launchOptions: {
       webhook: {
         domain: 'domain.tld',
-        hookPath: '/secret-path',
+        path: '/secret-path',
       }
     }
   }),
   inject: [ConfigService],
 });
 ```
+If you don't want to receive updates, you need to set `launchOptions` to `false`.
