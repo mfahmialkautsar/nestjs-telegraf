@@ -25,7 +25,7 @@ export class ListenersExplorerService
   implements OnModuleInit
 {
   private readonly telegrafParamsFactory = new TelegrafParamsFactory();
-  private bot: Telegraf<any>;
+  private bot!: Telegraf<any>;
 
   constructor(
     @Inject(TELEGRAF_STAGE)
@@ -96,11 +96,13 @@ export class ListenersExplorerService
     const scenes = this.flatMap<InstanceWrapper>(modules, (wrapper) =>
       this.filterScenes(wrapper),
     );
-    const sceneIds = [];
+    const sceneIds: string[] = [];
     scenes.forEach((wrapper) => {
-      const { sceneId, type, options } = this.metadataAccessor.getSceneMetadata(
+      const metadata = this.metadataAccessor.getSceneMetadata(
         wrapper.instance.constructor,
       );
+      if (!metadata) return;
+      const { sceneId, type, options } = metadata;
       if (sceneIds.includes(sceneId)) {
         throw new Error(`Two scenes with the same id ${sceneId} were detected`);
       }
@@ -120,32 +122,32 @@ export class ListenersExplorerService
     });
   }
 
-  private filterComposers(wrapper: InstanceWrapper): InstanceWrapper<unknown> {
+  private filterComposers(wrapper: InstanceWrapper): InstanceWrapper<unknown> | [] {
     const { instance } = wrapper;
-    if (!instance) return undefined;
+    if (!instance) return [];
 
-    const isComposer = this.metadataAccessor.isComposer(wrapper.metatype);
-    if (!isComposer) return undefined;
+    const isComposer = this.metadataAccessor.isComposer(wrapper.metatype as Function);
+    if (!isComposer) return [];
 
     return wrapper;
   }
 
-  private filterUpdates(wrapper: InstanceWrapper): InstanceWrapper<unknown> {
+  private filterUpdates(wrapper: InstanceWrapper): InstanceWrapper<unknown> | [] {
     const { instance } = wrapper;
-    if (!instance) return undefined;
+    if (!instance) return [];
 
-    const isUpdate = this.metadataAccessor.isUpdate(wrapper.metatype);
-    if (!isUpdate) return undefined;
+    const isUpdate = this.metadataAccessor.isUpdate(wrapper.metatype as Function);
+    if (!isUpdate) return [];
 
     return wrapper;
   }
 
-  private filterScenes(wrapper: InstanceWrapper): InstanceWrapper<unknown> {
+  private filterScenes(wrapper: InstanceWrapper): InstanceWrapper<unknown> | [] {
     const { instance } = wrapper;
-    if (!instance) return undefined;
+    if (!instance) return [];
 
-    const isScene = this.metadataAccessor.isScene(wrapper.metatype);
-    if (!isScene) return undefined;
+    const isScene = this.metadataAccessor.isScene(wrapper.metatype as Function);
+    if (!isScene) return [];
 
     return wrapper;
   }
@@ -170,7 +172,7 @@ export class ListenersExplorerService
 
     type WizardMetadata = { step: number; methodName: string };
     const wizardSteps: WizardMetadata[] = [];
-    const basicListeners = [];
+    const basicListeners: string[] = [];
 
     this.metadataScanner.scanFromPrototype(
       instance,
@@ -255,7 +257,7 @@ export class ListenersExplorerService
 
   createContextCallback<T extends Record<string, unknown>>(
     instance: T,
-    prototype: unknown,
+    prototype: any,
     methodName: string,
   ) {
     const paramsFactory = this.telegrafParamsFactory;

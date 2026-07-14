@@ -39,7 +39,7 @@ export class BaseExplorerService {
       const defined = providers.map((wrapper) => callback(wrapper, moduleRef));
 
       const imported: (T | T[])[] = moduleRef.imports?.size
-        ? [...moduleRef.imports.values()].reduce((prev, cur) => {
+        ? [...moduleRef.imports.values()].reduce((prev: (T | T[])[], cur) => {
             return [...prev, ...unwrap(cur)];
           }, [])
         : [];
