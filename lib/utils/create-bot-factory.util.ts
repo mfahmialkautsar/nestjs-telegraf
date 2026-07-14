@@ -14,7 +14,7 @@ export async function createBotFactory(
 
   if (options.launchOptions !== false) {
     bot
-      .launch(options.launchOptions)
+      .launch(options.launchOptions as any)
       .catch((err: Error) =>
         console.error(
           "Bot launch error. It won't be available until the app restarts.\n",

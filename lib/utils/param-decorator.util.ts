@@ -10,12 +10,12 @@ export const createTelegrafParamDecorator =
   (data?: ParamData): ParameterDecorator =>
   (target, key, index) => {
     const args =
-      Reflect.getMetadata(PARAM_ARGS_METADATA, target.constructor, key) || {};
+      Reflect.getMetadata(PARAM_ARGS_METADATA, target.constructor, key as any) || {};
     Reflect.defineMetadata(
       PARAM_ARGS_METADATA,
       assignMetadata(args, paramtype, index, data),
       target.constructor,
-      key,
+      key as any,
     );
   };
 
@@ -26,7 +26,7 @@ export const createTelegrafPipesParamDecorator =
     ...pipes: (Type<PipeTransform> | PipeTransform)[]
   ): ParameterDecorator =>
   (target, key, index) => {
-    addPipesMetadata(paramtype, data, pipes, target, key, index);
+    addPipesMetadata(paramtype, data, pipes, target, key as any, index);
   };
 
 export const addPipesMetadata = (
@@ -45,7 +45,7 @@ export const addPipesMetadata = (
 
   Reflect.defineMetadata(
     PARAM_ARGS_METADATA,
-    assignMetadata(args, paramtype, index, paramData, ...paramPipes),
+    assignMetadata(args, paramtype, index, paramData as any, ...paramPipes),
     target.constructor,
     key,
   );

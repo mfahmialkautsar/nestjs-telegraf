@@ -1,9 +1,9 @@
-import { SceneOptions } from 'telegraf/typings/scenes/base';
+
 
 export interface SceneMetadata {
   sceneId: string;
   type: 'base' | 'wizard';
-  options?: SceneOptions<any>;
+  options?: any;
 }
 
 export interface WizardStepMetadata {
